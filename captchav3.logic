@@ -1,0 +1,11 @@
+// This is the CORRECT way - it handles everything internally
+grecaptcha.enterprise.ready(() => {
+    grecaptcha.enterprise.execute("SITEKEY", {
+        action: "action"
+    }).then(token => {
+        console.log("✅ New reCAPTCHA token generated:", token);
+        console.log("✅ The reload request was automatically triggered!");
+    }).catch(error => {
+        console.error("❌ Error:", error);
+    });
+});
