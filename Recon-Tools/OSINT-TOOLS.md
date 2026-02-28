@@ -207,6 +207,10 @@ Large categorized OSINT tool repository.
 - Business intelligence
 - Domain investigation
 
+## 16 Dark Web OSINT TOOL (AI)
+Source
+https://github.com/apurvsinghgautam/robin
+- Ai powered dark web osint tool
 ---
 
 # Manual Phone Number Check (Instagram Method)
