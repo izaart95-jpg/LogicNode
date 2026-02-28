@@ -40,6 +40,17 @@ pip3 --version
 ### 1. Install Python Dependencies
 
 ```bash
+# Download firmware.bin
+Example ESP32 WROOM 
+https://github.com/francescopace/espectre/releases/download/2.5.1/espectre-2.5.1-esp32.bin
+
+# Flash Firmware At 0x0 Using Flash Tool
+WINDOWS - https://esptool.spacehuhn.com
+LINUX (CLI) - esptool.py --port COM3 write_flash 0x0 <file.bin>
+
+```
+
+```bash
 # Install required packages
 pip3 install websockets aiohttp
 
@@ -64,8 +75,10 @@ Place these files in your project directory:
 
 Ensure your `espectre.yaml` file is in the same directory and your ESP32 device is:
 - Powered on
-- Connected to your Wi-Fi network
+- Connect to esp32 Wifi Enter Router SSID and PASS
+- Ensure Esp32 is Connected to your Wi-Fi network
 - Accessible on the network
+- Change SSID and PASS in espectre.yaml to your router SSID and PASS
 
 Test connection:
 ```bash
@@ -73,7 +86,7 @@ Test connection:
 esphome logs espectre.yaml --device OTA
 
 # Or test direct IP connection
-esphome logs espectre.yaml --device 10.117.195.48
+esphome logs espectre.yaml --device ESPIP
 ```
 
 ## 🎮 Usage
