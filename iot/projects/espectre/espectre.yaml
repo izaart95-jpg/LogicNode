@@ -1,0 +1,15 @@
+esphome:
+  name: espectre
+
+esp32:
+  board: esp32dev
+  framework
+    type: esp-idf
+
+wifi:
+  ssid: "ROUTER-SSID"
+  password: "" 
+
+api:
+
+logger:
