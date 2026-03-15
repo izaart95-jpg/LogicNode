@@ -119,6 +119,22 @@ Media processing, creative tools, and image enhancement.
 | [Mobile Creative Tools](media/mobile-creative-tools.md) | CapCut, Alight Motion, CPU-Z — mobile video editing, motion graphics, system info |
 | [Image Upscalers](media/imgupscaler.md) | imgupscaler.com, Real-ESRGAN, Upscayl, Waifu2x — AI-based image and video upscaling |
 
+### Mail
+Email providers and clients for privacy-conscious communication.
+
+| Document | Description |
+|----------|-------------|
+| [Email Providers](mail/email-providers.md) | ProtonMail, Tuta Mail — end-to-end encrypted email, zero-knowledge providers, Swiss and German jurisdiction |
+| [Email Clients](mail/email-clients.md) | Thunderbird, Canary Mail — desktop and mobile clients, PGP setup, IMAP configuration, Proton Bridge |
+
+### Streaming
+Video platforms and anime streaming services.
+
+| Document | Description |
+|----------|-------------|
+| [Video Platforms](streaming/video-platforms.md) | Dailymotion, EverythingMoe — general video hosting, API access, embedding, yt-dlp usage |
+| [Anime Streaming](streaming/anime-streaming.md) | AnimePahe, AnimeKai, HiAnime, Toono, RareAnimes — platforms, features, download tips, comparison |
+
 ### Reference
 Storage platforms, communities, and quick-reference directories.
 
@@ -126,6 +142,9 @@ Storage platforms, communities, and quick-reference directories.
 |----------|-------------|
 | [Archive.org](reference/archive-org.md) | Wayback Machine, Software Library, Books, audio/video archive, CDX API, upload via CLI |
 | [MediaFire](reference/mediafire.md) | Free file hosting — sharing links, folder distribution, API access, CLI downloading |
+| [Gofile](reference/gofile.md) | Anonymous unlimited-size file hosting — no account required, REST API, 10-day guest retention |
+| [Mega.nz](reference/mega-nz.md) | Encrypted cloud storage — E2EE, 20 GB free, MEGAcmd CLI, Python SDK, security model |
+| [Smash](reference/smash.md) | Large file transfer service — unlimited size, 14-day free link, email delivery, Node.js SDK |
 | [Platforms & Communities](reference/platforms-and-communities.md) | Social platforms, cybersec news, threat intel orgs, conferences, underground forums |
 
 ---
@@ -134,9 +153,9 @@ Storage platforms, communities, and quick-reference directories.
 
 | Metric | Value |
 |--------|-------|
-| **Total Documents** | 44 |
-| **Categories** | 11 |
-| **Topics Covered** | Kernels, OS Theory, Protocols, Virtualization, Networking, Security, Reverse Engineering, OPSEC, IoT, Mobile, AI, Coding Agents, Docker, Kubernetes, Automation, Deployment, Media, File Storage |
+| **Total Documents** | 55 |
+| **Categories** | 13 |
+| **Topics Covered** | Kernels, OS Theory, Protocols, Virtualization, Networking, Security, Reverse Engineering, OPSEC, IoT, Mobile, AI, Coding Agents, Docker, Kubernetes, Automation, Deployment, Media, Email, File Storage, Video Streaming, Anime |
 
 ---
 
