@@ -20,6 +20,7 @@ Core computer science and systems theory.
 | [Kernel Architecture](fundamentals/kernel-architecture.md) | Linux, Windows NT, and Darwin kernel internals — architecture, syscalls, debugging, compilation, tuning, security |
 | [Operating Systems](fundamentals/operating-systems.md) | OS theory, chroot, proot, proot-distro, virtualization, namespaces, isolation mechanisms |
 | [Linux Distributions](fundamentals/linux-distributions.md) | RHEL, Debian, Arch ecosystems — package managers, release cycles, use-case recommendations |
+| [Network Protocols](fundamentals/network-protocols.md) | Complete protocol reference — OSI model, TCP/UDP/QUIC, HTTP, DNS, TLS, MQTT, BGP, WireGuard, and 80+ protocols |
 
 ### Networking
 Network infrastructure, tunneling, and secure connectivity.
@@ -28,6 +29,7 @@ Network infrastructure, tunneling, and secure connectivity.
 |----------|-------------|
 | [SSH Tunneling](networking/ssh-tunneling.md) | Remote port forwarding, reverse proxies — Pinggy, Serveo, localhost.run |
 | [VPN & ZTNA](networking/vpn-and-ztna.md) | Tailscale, WireGuard, OpenVPN, NetBird, ProtonVPN, Tor, Playit.gg |
+| [Free DNS Services](networking/free-dns-services.md) | Dynamic DNS (No-IP, Dynu, DuckDNS, Cloudflare), free domains, DNS hosting |
 
 ### Security
 Offensive security tools, OSINT, and threat intelligence.
@@ -60,6 +62,14 @@ Android development, Termux, and mobile virtualization.
 | [Termux Pentesting](mobile/termux-pentesting.md) | Kali NetHunter Rootless, Parrot OS, BlackArch on Android |
 | [Emulators](mobile/emulators.md) | VPhone OS, VMOS, Winlator, Vectras VM, PPSSPP — Android virtualization |
 
+### AI
+Artificial intelligence platforms, APIs, chat interfaces, and local inference.
+
+| Document | Description |
+|----------|-------------|
+| [Platforms & APIs](ai/platforms-and-apis.md) | OpenRouter, Hugging Face, Pollinations, g4f, Groq, Runway ML, Ollama, llama.cpp — inference, APIs, creative tools |
+| [Chat Interfaces](ai/chat-interfaces.md) | ChatGPT, Claude, DeepSeek, Qwen, Kimi, Gemini, FlowGPT, LibreChat, Open WebUI — assistants and self-hosted UIs |
+
 ### Reference
 Quick-reference materials and community directories.
 
@@ -73,9 +83,9 @@ Quick-reference materials and community directories.
 
 | Metric | Value |
 |--------|-------|
-| **Total Documents** | 16 |
-| **Categories** | 6 |
-| **Topics Covered** | Kernels, OS Theory, Networking, Security, IoT, Mobile |
+| **Total Documents** | 20 |
+| **Categories** | 7 |
+| **Topics Covered** | Kernels, OS Theory, Protocols, Networking, Security, IoT, Mobile, AI |
 
 ---
 
