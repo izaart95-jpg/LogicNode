@@ -750,3 +750,293 @@ sw_vers                     # macOS version
 ---
 
 > **💡 Pro Tip**: Understanding kernels is fundamental to systems programming, security research, and performance optimization. Always test kernel modifications in virtual machines first!
+
+---
+
+## 13. Linux Kernel Modules Management
+
+### Listing & Inspecting Modules
+
+```bash
+# List all loaded modules
+lsmod
+
+# Detailed module information
+modinfo <module_name>
+
+# List available modules for current kernel
+find /lib/modules/$(uname -r) -name "*.ko"
+
+# Common module categories
+lsmod | grep -E 'e1000|igb|ixgbe|iwlwifi|ath'     # Network drivers
+lsmod | grep -E 'ext4|xfs|btrfs|vfat|ntfs'         # Filesystem modules
+lsmod | grep -E 'kvm|kvm_intel|kvm_amd|vboxdrv'     # Virtualization
+lsmod | grep -E 'i915|nvidia|amdgpu|radeon'         # Graphics
+lsmod | grep -E 'usb_storage|xhci_hcd|ehci_hcd'     # USB modules
+```
+
+### Loading & Unloading
+
+```bash
+# Load a module
+sudo modprobe <module_name>
+
+# Remove a module
+sudo modprobe -r <module_name>
+
+# Blacklist a module (prevent loading)
+echo "blacklist <module_name>" | sudo tee -a /etc/modprobe.d/blacklist.conf
+
+# Auto-load module at boot
+echo "<module_name>" | sudo tee -a /etc/modules-load.d/<module_name>.conf
+```
+
+---
+
+## 14. Kernel Parameters & Tuning
+
+### Viewing and Modifying Parameters
+
+```bash
+# View all kernel parameters
+sysctl -a
+
+# View specific parameter
+sysctl kernel.hostname
+
+# Temporarily change parameter
+sudo sysctl -w vm.swappiness=10
+
+# Permanently change parameter
+echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf
+
+# Reload sysctl configuration
+sudo sysctl -p
+
+# Parameter filesystem layout
+/proc/sys/
+├── kernel/      # Core kernel parameters
+├── vm/          # Virtual memory settings
+├── net/         # Network stack parameters
+├── fs/          # Filesystem settings
+└── dev/         # Device-specific settings
+```
+
+### Important Parameters Reference
+
+```bash
+# Memory Management
+vm.swappiness              # Swap usage tendency (0-100, default 60)
+vm.dirty_ratio             # Max dirty pages before blocking writes (%)
+vm.dirty_background_ratio  # Background writeback threshold (%)
+vm.overcommit_memory       # Memory overcommit policy (0,1,2)
+
+# Network Tuning
+net.core.somaxconn         # Max listen queue backlog
+net.ipv4.tcp_max_syn_backlog  # SYN backlog size
+net.ipv4.ip_forward        # IP forwarding (0=off, 1=on)
+
+# Security
+kernel.randomize_va_space  # ASLR (0=off, 1=partial, 2=full)
+kernel.dmesg_restrict      # Restrict dmesg access (0,1)
+kernel.kptr_restrict       # Kernel pointer restriction (0,1,2)
+```
+
+### Example: High-Performance Web Server Tuning
+
+```bash
+# /etc/sysctl.d/99-webserver.conf
+fs.file-max = 2097152
+net.ipv4.ip_local_port_range = 1024 65535
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.ipv4.tcp_rmem = 4096 87380 16777216
+net.ipv4.tcp_wmem = 4096 87380 16777216
+net.ipv4.tcp_window_scaling = 1
+net.core.somaxconn = 65535
+net.ipv4.tcp_max_syn_backlog = 8192
+
+# Apply changes
+sudo sysctl -p /etc/sysctl.d/99-webserver.conf
+```
+
+---
+
+## 15. Kernel Compilation & Building
+
+### Prerequisites
+
+```bash
+# Debian/Ubuntu
+sudo apt install build-essential libncurses-dev bison flex libssl-dev libelf-dev
+
+# RHEL/Fedora
+sudo dnf install gcc make ncurses-devel bison flex openssl-devel elfutils-libelf-devel
+```
+
+### Building from Source
+
+```bash
+# 1. Download kernel source
+cd /usr/src
+sudo wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.x.tar.xz
+sudo tar -xf linux-6.x.tar.xz
+cd linux-6.x
+
+# 2. Get current config
+cp /boot/config-$(uname -r) .config
+
+# 3. Update config for new version
+make olddefconfig
+# OR: Interactive configuration
+make menuconfig
+
+# 4. Compile kernel
+make -j$(nproc)
+
+# 5. Compile and install modules
+make modules
+sudo make modules_install
+
+# 6. Install kernel
+sudo make install
+
+# 7. Update bootloader
+sudo update-grub                                    # Debian/Ubuntu
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg         # RHEL/Fedora
+
+# 8. Reboot
+sudo reboot
+```
+
+---
+
+## 16. Kernel Versioning & Lifecycle
+
+### Version Number Format
+
+```
+Major.Minor.Patch-Extra
+Example: 6.5.11-200.fc38.x86_64
+
+• 6      = Major version
+• 5      = Minor version
+• 11     = Patch level
+• 200    = Distribution-specific build number
+• fc38   = Fedora 38
+• x86_64 = Architecture
+```
+
+### Release Cycle
+
+```
+MAINLINE KERNEL
+• Released every 9-10 weeks
+• Latest features and drivers
+• Maintained by Linus Torvalds
+        ↓
+STABLE KERNEL
+• Bug fixes and security patches
+• Maintained by Greg Kroah-Hartman
+        ↓
+LONGTERM (LTS)
+• Maintained for 2-6+ years
+• Critical fixes only
+• Used by distributions (RHEL, Ubuntu LTS)
+• Current LTS: 5.10, 5.15, 6.1, 6.6
+```
+
+---
+
+## 17. Advanced: eBPF, Namespaces & cgroups
+
+### eBPF (Extended Berkeley Packet Filter)
+
+```bash
+# Install tools
+sudo apt install bpfcc-tools linux-tools-$(uname -r)
+
+# Trace exec() calls
+sudo /usr/share/bcc/tools/execsnoop
+
+# Trace file opens
+sudo /usr/share/bcc/tools/opensnoop
+
+# Trace TCP connections
+sudo /usr/share/bcc/tools/tcpconnect
+```
+
+### Namespaces (Container Foundation)
+
+```bash
+# View namespaces
+ls -la /proc/self/ns/
+
+# Namespace types: pid, net, mnt, uts, ipc, user
+
+# Create isolated namespace
+unshare --pid --fork --mount-proc /bin/bash
+```
+
+### Control Groups (cgroups)
+
+```bash
+# View cgroups
+cat /proc/<pid>/cgroup
+
+# Modern cgroups v2
+ls /sys/fs/cgroup/
+
+# Limit memory for a process
+echo 512M > /sys/fs/cgroup/memory.limit_in_bytes
+echo <pid> > /sys/fs/cgroup/cgroup.procs
+```
+
+---
+
+## 18. Kernel Hardening
+
+```bash
+# Enable lockdown mode
+# Boot parameter: lockdown=confidentiality
+
+# Disable module loading (maximum security)
+echo 1 | sudo tee /proc/sys/kernel/modules_disabled
+
+# Restrict ptrace
+echo "kernel.yama.ptrace_scope = 2" | sudo tee -a /etc/sysctl.d/60-kernel-hardening.conf
+
+# Enable strict reverse path filtering
+echo "net.ipv4.conf.all.rp_filter = 1" | sudo tee -a /etc/sysctl.d/60-kernel-hardening.conf
+
+# Check security features
+cat /proc/sys/kernel/randomize_va_space    # ASLR
+cat /proc/sys/kernel/kptr_restrict         # Kernel pointer restriction
+cat /proc/sys/kernel/dmesg_restrict        # dmesg restriction
+```
+
+---
+
+## 19. Best Practices
+
+**Security:**
+- Keep kernel updated with security patches
+- Use signed kernel modules
+- Enable SELinux/AppArmor
+- Disable unnecessary kernel modules
+
+**Performance:**
+- Tune kernel parameters for workload
+- Use appropriate I/O scheduler
+- Monitor system resources regularly
+
+**Stability:**
+- Test new kernels in staging first
+- Keep previous kernel for rollback
+- Monitor kernel logs for errors
+- Use LTS kernels for production
+
+**Maintenance:**
+- Document custom kernel parameters
+- Backup kernel configurations
+- Remove old unused kernels
