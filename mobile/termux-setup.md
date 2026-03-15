@@ -162,5 +162,108 @@ pkg update -y
 pkg install htop neovim tmux zsh fish ffmpeg
 ```
 
+---
+
+# 🖥️ Tmux (Terminal Multiplexer)
+
+Tmux lets you run multiple terminal sessions inside a single window, and keeps sessions alive when you disconnect.
+
+## Install
+```bash
+pkg install tmux
+```
+
+## Core Concepts
+- **Session** — A collection of windows (persists when detached)
+- **Window** — A full-screen tab within a session
+- **Pane** — A split within a window
+
+## Essential Commands
+```bash
+# Start new session
+tmux
+
+# Start named session
+tmux new -s mysession
+
+# Detach from session
+# Press: Ctrl+b, then d
+
+# List sessions
+tmux ls
+
+# Reattach to session
+tmux attach -t mysession
+
+# Kill session
+tmux kill-session -t mysession
+```
+
+## Key Bindings (prefix: Ctrl+b)
+
+| Key | Action |
+|-----|--------|
+| `c` | Create new window |
+| `n` | Next window |
+| `p` | Previous window |
+| `,` | Rename window |
+| `%` | Split pane horizontally |
+| `"` | Split pane vertically |
+| `Arrow keys` | Navigate panes |
+| `z` | Toggle pane zoom (fullscreen) |
+| `d` | Detach session |
+| `[` | Enter copy/scroll mode (q to exit) |
+
+## Basic Configuration (~/.tmux.conf)
+```bash
+# Enable mouse support
+set -g mouse on
+
+# Set prefix to Ctrl+a (easier than Ctrl+b)
+unbind C-b
+set-option -g prefix C-a
+bind-key C-a send-prefix
+
+# Start windows at 1 instead of 0
+set -g base-index 1
+
+# Faster escape time
+set -sg escape-time 10
+
+# Increase scrollback buffer
+set -g history-limit 10000
+```
+
+> **See Also:** [Terminal Tools](../devtools/terminal-tools.md) for a full Tmux guide with plugins and advanced configuration
+
+---
+
+# 🎬 FFmpeg in Termux
+
+FFmpeg is a powerful multimedia tool for converting, streaming, and processing audio/video.
+
+```bash
+pkg install ffmpeg
+```
+
+**Quick examples:**
+```bash
+# Convert video format
+ffmpeg -i input.mp4 output.avi
+
+# Extract audio from video
+ffmpeg -i video.mp4 -vn audio.mp3
+
+# Compress video
+ffmpeg -i input.mp4 -crf 28 output.mp4
+
+# Trim video (start at 1:00, 30 seconds)
+ffmpeg -i input.mp4 -ss 00:01:00 -t 00:00:30 -c copy clip.mp4
+```
+
+> **See Also:** [Media Tools](../media/media-tools.md) for the complete FFmpeg reference with filters, streaming, and batch processing
+
+---
+
 # Pro Tip
 ## You can enable a GUI for Termux by following the setup guide at: https://github.com/sabamdarif/termux-desktop

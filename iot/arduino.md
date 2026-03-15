@@ -177,6 +177,39 @@ Large third-party ecosystem available.
 | Clock Speed  | 16 MHz      | 80–160 MHz    | Up to 240 MHz        |
 | RAM          | 2 KB        | ~50 KB        | > 300 KB             |
 
-# 15. Conclusion
+## 15. Arduino IDE 2.x
+
+Arduino IDE 2.x is a major rewrite of the original IDE with modern features.
+
+**New Features in IDE 2.x:**
+- **Autocomplete:** IntelliSense-style code completion
+- **Live Debugger:** Step-through debugging (on supported boards like Zero, MKR, Nano 33 BLE)
+- **Improved Board Manager:** Faster, searchable, version management
+- **Sketch Folder Management:** Better project navigation with file tabs
+- **Dark Mode:** Built-in theme support
+- **Serial Plotter:** Real-time graphing of serial data
+- **Faster Compilation:** Incremental builds
+
+**Install:**
+- Download from https://www.arduino.cc/en/software
+- Available for Windows, macOS, Linux (AppImage)
+- Also available via Flatpak: `flatpak install cc.arduino.IDE2`
+
+**Key Differences from IDE 1.x:**
+
+| Feature | IDE 1.x | IDE 2.x |
+|---------|---------|---------|
+| Autocomplete | No | Yes |
+| Debugger | No | Yes (select boards) |
+| Speed | Slower | Faster |
+| Interface | Java-based | Electron-based |
+| Serial Plotter | Basic | Enhanced |
+
+> **See Also:** [ArduinoDroid](../mobile/android-automation.md) — Arduino IDE for Android (program boards via USB OTG)
+> **See Also:** [ESP-IDF](esp32.md#62-esp-idf-espressif-iot-development-framework) — Official ESP32 SDK as alternative to Arduino framework
+
+---
+
+## 16. Conclusion
 
 Arduino is one of the most influential open-source hardware platforms ever created. It democratized electronics development and remains a top choice for learning embedded systems, rapid prototyping, and educational projects worldwide.

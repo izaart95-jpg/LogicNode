@@ -290,6 +290,7 @@ Often called:
 - Burp Suite
 - SQLMap
 - Nikto
+- OWASP ZAP
 
 ## Social Engineering
 - Social-Engineer Toolkit
@@ -301,6 +302,32 @@ Often called:
 ## Networking Utilities
 - Netcat
 - Arpwatch
+
+---
+
+## 23. OWASP ZAP (Zed Attack Proxy)
+
+**OWASP ZAP** is a free, open-source web application security scanner maintained by the OWASP Foundation.
+
+- Intercepting proxy (like Burp Suite, but free)
+- Automated vulnerability scanning
+- Active and passive scanning modes
+- API testing support
+- Spidering/crawling
+- Fuzzing
+- WebSocket testing
+- CI/CD integration via CLI/API
+
+```bash
+# Install
+sudo apt install zaproxy
+# Or download from https://www.zaproxy.org/download/
+
+# Quick scan from CLI
+zap-cli quick-scan --self-contained --start-options '-config api.disablekey=true' http://target.com
+```
+
+> **See Also:** [Web Application Security](web-application-security.md) for the full OWASP Top 10, OFFSEC certifications, and HackTheBox guide
 
 ---
 

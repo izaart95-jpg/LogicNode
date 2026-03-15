@@ -338,6 +338,8 @@ docker compose up -d
 
 **Best for:** Teams or individuals who want a unified private chat UI for all AI providers.
 
+> **See Also:** [Docker Essentials](../devtools/docker-essentials.md) for Docker fundamentals and a detailed LibreChat Docker deployment walkthrough.
+
 ---
 
 ### 4.2 Open WebUI
