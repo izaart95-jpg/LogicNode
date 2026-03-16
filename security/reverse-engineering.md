@@ -568,9 +568,243 @@ Dynamic (Frida):
 
 ---
 
+## 12. Windows PE Analysis Tools
+
+Specialized tools for Windows Portable Executable (PE) file analysis — packer detection, process dumping, import table reconstruction, and PE editing. Sourced from Apriorit's RE toolkit: https://www.apriorit.com/dev-blog/366-software-reverse-engineering-tools
+
+### ImHex
+
+- **Website:** https://imhex.werwolv.net
+- **Repository:** https://github.com/WerWolv/ImHex
+- **License:** GPL v2
+- **Platform:** Windows, macOS, Linux
+- **Type:** Advanced hex editor with pattern language and visualization
+
+ImHex goes well beyond a traditional hex editor. Its custom pattern language (similar to C++/Rust syntax) lets you define and visualize binary structures directly over the raw bytes — it ships with patterns for PE, ELF, pcap, Mach-O, and more.
+
+```
+Key features:
+  - Custom pattern language: describe binary formats, visualize structs over data
+  - Entropy graph: instantly spot packed/encrypted regions (high entropy = compressed/encrypted)
+  - Byte distribution chart: identify data types by distribution profile
+  - Built-in disassembler: x86, x86-64, ARM, ARM64, MIPS, RISC-V and more
+  - Advanced search: strings, byte sequences, regex, binary patterns, numeric values
+  - Bookmarks and annotations on binary ranges
+  - File comparison and diffing
+
+Common uses in RE:
+  - Identify file type by magic bytes (MZ = PE, \x7fELF = ELF, etc.)
+  - Spot packed sections by entropy (> 7.0 entropy = likely compressed/encrypted)
+  - Inspect raw PE headers before loading into IDA/Ghidra
+  - Parse custom binary protocols or file formats
+```
+
+### PEiD
+
+- **Type:** Packer and compiler detection tool for PE files
+- **Platform:** Windows
+- **Type:** Static PE analysis — signature-based packer identification
+
+PEiD identifies what packer, protector, or compiler was used to build a PE binary by matching against a signature database. Essential first step when analyzing a packed malware sample.
+
+```
+Workflow:
+  1. Open PE in PEiD
+  2. Options → Hardcore Scan → Save
+  3. Run scan on target file/folder
+  4. Result: "UPX 0.89.6 - 1.02 / 1.05 - 2.90 -> Markus & Laszlo"
+     → Binary is packed with UPX — must unpack before meaningful disassembly
+
+Plugins:
+  KANAL (Krypto ANALyzer): detects embedded crypto algorithm constants
+    → identifies AES S-boxes, MD5 init values, RSA patterns etc.
+    → tells you a binary contains crypto without reading code
+
+After identifying the packer:
+  Known packer (UPX): use upx -d binary.exe or CFF Explorer UPX utility
+  Unknown packer: dynamic unpack — run under debugger, find OEP, dump with Scylla
+```
+
+### Scylla
+
+- **Repository:** https://github.com/NtQuery/Scylla
+- **Type:** Process dumper and PE import table reconstructor
+- **Platform:** Windows (x86 and x64)
+
+Scylla dumps a running packed/protected process from memory and reconstructs its import table, producing a functional PE that can be analyzed statically or run standalone.
+
+```
+Use case: binary is packed — static analysis tools see garbage
+Solution:
+  1. Run packed binary under debugger (IDA/x64dbg)
+  2. Let packer unpack itself in memory
+  3. Find the Original Entry Point (OEP) — where real code starts
+     Technique: set BP after popa instruction, follow jmp to OEP
+  4. Open Scylla while process is running at OEP
+  5. Select process → enter OEP address → IAT Autosearch → Get Imports
+  6. Dump → Fix Dump → saves binary with restored import table
+  7. Load dumped binary into IDA/Ghidra for full static analysis
+
+Key features:
+  - IAT (Import Address Table) reconstruction from running process
+  - Memory dumping at any point during execution
+  - PE header fixing
+  - Supports x86 and x64 Windows processes
+  - Integrates with x64dbg as a plugin
+```
+
+### CFF Explorer
+
+- **Website:** https://ntcore.com/explorer-suite/
+- **Type:** Full PE editing suite
+- **Platform:** Windows
+
+CFF Explorer is a comprehensive PE file editor — the Swiss Army knife for manual PE manipulation during RE work.
+
+```
+Included tools:
+  PE Editor:          Edit any field in PE headers (flags, subsystem, entry point, etc.)
+  Hex Editor:         Raw bytes view and edit
+  Import Editor:      Add, remove, modify imported DLLs and functions
+  Resource Editor:    View/extract/replace icons, dialogs, manifests, version info
+  Signature Scanner:  Detect packers and compilers (like PEiD)
+  UPX Utility:        Unpack UPX-packed executables directly
+  Address Converter:  Convert between RVA, VA, and file offset
+  Disassembler:       Quick view of code sections
+  Dependency Analyzer: Show all required DLLs
+
+Common RE tasks:
+  - Unpack UPX: open binary → UPX Utility → Unpack
+  - Fix stripped binary: set correct ImageBase to match in-memory address
+  - Remove relocation table: set Relocation Directory RVA to 0
+    (required when dumped process has fixed ImageBase, can't relocate)
+  - Inspect PE sections and their characteristics (executable, writable)
+  - Edit DLL name in import table (redirect imports)
+```
+
+### Relocation Section Editor
+
+- **Repository:** https://github.com/mohic/Relocation-Section-Editor
+- **Type:** PE relocation table editor
+- **Platform:** Windows
+
+Edits the `.reloc` section of PE files — add, remove, or modify relocation entries. Used when patching code that changes absolute address references, or when cleaning up a dumped binary whose relocation table has stale/incorrect entries.
+
+```
+Use case in RE workflow:
+  After patching a binary (e.g., replacing a cmp instruction with jmp):
+    - Old instruction contained an absolute address reference → was in relocation table
+    - New instruction is a relative jump → must NOT be in relocation table
+    - If stale relocation entry remains: Windows loader will apply delta to the
+      bytes of the new instruction, corrupting it
+  Solution: open binary in Relocation Section Editor, find and delete the stale entry
+
+Other use:
+  - Remove entire relocation table (set to empty) when loading at fixed base
+  - Manually construct relocation table after binary reconstruction
+```
+
+### API Monitor
+
+- **Website:** http://www.rohitab.com/apimonitor
+- **Type:** Windows API call interceptor and monitor
+- **Platform:** Windows (x86 and x64)
+- **Free:** Yes
+
+API Monitor intercepts every Windows API call made by an application in real time, showing function names, input arguments, and return values. Ships with definitions for 13,000+ API functions and 1,300+ COM interface methods.
+
+```
+Key capabilities:
+  - Monitor any running process or launch a new one under monitoring
+  - Filter by API category: file I/O, registry, network, crypto, process, memory, etc.
+  - View full parameter values (strings, structs, handles decoded)
+  - Set breakpoints on specific API calls (pause execution when API is called)
+  - Call stack view: see which code in the binary called each API
+  - Supports both 32-bit and 64-bit processes
+
+Common RE uses:
+  - Find what files a binary reads/writes without reading all code
+  - See what registry keys are accessed (persistence, config)
+  - Trace network connections: WSAConnect, HttpSendRequest
+  - Identify crypto operations: CryptEncrypt, BCryptEncrypt
+  - Monitor process injection: VirtualAllocEx, WriteProcessMemory, CreateRemoteThread
+  - Observe MessageBox, DialogBox calls (check for hidden dialogs)
+
+Example workflow:
+  File → Monitor New Process → select target binary
+  In API Filter panel: expand User32.dll → check MessageBoxA, MessageBoxW
+  Run → see every MessageBox call with arguments (caption, text, flags)
+  Right-click any call → Set Pre-Call Breakpoint → execution pauses before call
+```
+
+### Fiddler
+
+- **Website:** https://www.telerik.com/fiddler
+- **Type:** HTTP/HTTPS traffic proxy and inspector
+- **Platform:** Windows (Fiddler Classic), cross-platform (Fiddler Everywhere)
+- **Free tier:** Fiddler Classic is free
+
+Fiddler is a system-wide HTTP/HTTPS proxy that intercepts, logs, and lets you inspect or modify all web traffic from any application. Unlike Wireshark (raw packets), Fiddler works at the HTTP layer — showing decoded requests and responses with full headers and body.
+
+```
+RE use cases:
+  - Intercept API calls from desktop applications to their backend
+  - Decode obfuscated or compressed HTTP responses
+  - Find hardcoded API endpoints and parameters
+  - Test what happens when you replay/modify a request
+  - Bypass HTTPS: Fiddler installs its own CA cert to decrypt TLS traffic
+    (effective against applications that use the OS cert store)
+    Note: apps with SSL pinning require additional bypass (see Frida section)
+
+Key features:
+  - Live request/response capture for all HTTP(S) traffic system-wide
+  - Hex view, raw view, JSON view, XML view of request/response bodies
+  - Breakpoint mode: pause request before sending, edit, then continue
+  - Composer: craft and send custom HTTP requests
+  - FiddlerScript: JavaScript-based rules for automatic modification
+  - Plugins: WBXML decoder, traffic diff, API fuzzing extensions
+  - Request to Code plugin: convert any captured request to C#, VB, or Python code
+
+Comparison with other proxies:
+  Fiddler:      Best for Windows desktop app RE, simple setup
+  Burp Suite:   Better for web app pentesting, active scanning
+  mitmproxy:    CLI-based, scriptable, cross-platform, free
+  Charles:      macOS-friendly alternative to Fiddler
+```
+
+### AI-Assisted RE — Ghidra + MCP
+
+Modern LLMs can be integrated directly into RE tools via MCP (Model Context Protocol), enabling AI agents to interact with the disassembler database — list functions, run decompilation, rename variables, and add comments programmatically.
+
+```
+Setup (Ghidra + GhidraMCP):
+  1. Install Ghidra 11.3+
+  2. Install GhidraMCP plugin: https://github.com/LaurieWired/GhidraMCP
+  3. Connect an MCP client (5ire, Claude, etc.) with an LLM API key
+  4. Load binary in Ghidra → start MCP server from Ghidra plugin
+
+AI-assisted tasks that work well:
+  - Rename FUN_* functions with descriptive names based on decompiled code
+  - Rename local variables and parameters to meaningful identifiers
+  - Summarize what a function does in plain language
+  - Identify anti-debug patterns and explain how they work
+  - Explain a complex algorithm (sort, hash, crypto) from decompiled output
+
+Limitations (as of 2025):
+  - Complex multi-function requests often partially fail
+  - AI output must be manually verified — errors are common
+  - Large-scale bulk renaming is unreliable
+  - Treat as an assistant, not an authority
+  - IDA Pro also has MCP-compatible server available
+```
+
+---
+
 ## See Also
 
 - [Binary Analysis](binary-analysis.md) — angr, Qiling, PANDA, GDB/LLDB in depth, MemProcFS
 - [Exploit Development](exploit-development.md) — Using RE for vulnerability research
-- [Drivers & DLLs](../fundamentals/drivers-and-dlls.md) — PE/ELF format internals
+- [Drivers & DLLs](../fundamentals/drivers-and-dlls.md) — PE/ELF format internals, DLL injection
 - [Compilers & Interpreters](../fundamentals/compilers-and-interpreters.md) — What the disassembler sees
+- [Network Analysis](network-analysis.md) — Zeek, Wireshark for network-level RE
+- **Apriorit RE Tools Overview:** https://www.apriorit.com/dev-blog/366-software-reverse-engineering-tools
