@@ -166,6 +166,55 @@ This document covers social platforms, cybersecurity news outlets, threat intell
 
 ---
 
+## 12. Skype
+
+**Skype** is a legacy communication platform owned by Microsoft, discontinued for consumers in May 2025 and replaced by Microsoft Teams.
+
+- **Founded:** 2003
+- **Status:** Consumer service discontinued May 2025; legacy account management still available
+
+### Key Features (Legacy)
+- Voice/video calls, instant messaging, screen sharing
+- Skype Credit for calls to phones
+- Contact export via legacy portal
+
+### Migration & Access
+- **Teams (replacement):** https://teams.microsoft.com
+- **Skype portal (legacy):** https://secure.skype.com/portal/overview — still accessible for account data, contact exports, and credit balance checks
+- Existing Skype Credit can be used via Teams or converted
+- If someone sends a `skype:` link or asks for your Skype, direct them to your Teams account or a Teams meeting link instead
+
+---
+
+## 13. HL Gaming Official
+
+**HL Gaming Official** is a Free Fire-focused gaming platform offering tools, tournaments, community features, and developer APIs.
+
+- **Website:** https://www.hlgamingofficial.com
+- **Type:** Gaming ecosystem & community platform
+- **User Base:** 100K+ users
+
+### Key Features
+- 200+ gaming tools focused on Garena Free Fire
+- Tournament hosting and community engagement
+- Public REST API for developers (free & paid tiers)
+
+### Key Tools
+- FF ID Info Check — player profile lookup by UID
+- FF Likes Generator — send profile likes by UID
+- FF Ban/Unban Checker — check if an account is banned
+- FF Account Value Calculator — estimate account worth
+- FF AI Account Analyzer — AI-powered profile analysis
+- FF Redeem Codes Generator
+- Stylish Nickname Generator
+- Game Stats (live data for 70M+ games)
+
+### Developer Resources
+- **API Docs:** https://www.hlgamingofficial.com/p/developers.html
+- Key endpoints: player stats, leaderboard, likes generator, UID validation, wishlist checker, redeem codes
+
+---
+
 # Part 2: Cybersecurity News & Media
 
 | Source | Focus |
@@ -246,7 +295,8 @@ APT reports typically include:
 
 | Category | Examples |
 |----------|---------|
-| **Social Platforms** | Discord, Reddit, Telegram, X, WhatsApp, LinkedIn |
+| **Social Platforms** | Discord, Reddit, Telegram, X, WhatsApp, LinkedIn, Skype, Bluesky, Dread, Endchan |
+| **Gaming Platforms** | HL Gaming Official |
 | **News** | Bleeping Computer, Krebs, SecurityWeek, Dark Reading |
 | **Research** | Citizen Lab, Securelist, Insikt Group |
 | **Government** | CISA, KBCERT |
@@ -270,3 +320,5 @@ APT reports typically include:
 | WhatsApp | Messaging | Private communication |
 | LinkedIn | Professional Network | Jobs & career |
 | Bluesky | Decentralized Social | Open microblogging |
+| Skype | Messaging (Legacy) | Voice/video calls (replaced by Teams) |
+| HL Gaming Official | Gaming Platform | Free Fire tools, tournaments, APIs |
