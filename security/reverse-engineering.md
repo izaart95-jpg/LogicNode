@@ -1,379 +1,576 @@
 # Reverse Engineering
 
-A comprehensive guide to reverse engineering tools and techniques for analyzing binaries, malware, firmware, and applications. This document covers the fundamentals of static and dynamic analysis, along with detailed usage of leading tools including x64dbg, Ghidra, Frida, and IDA Pro.
-
-> **Disclaimer:** All tools, techniques, and examples described in this document are intended for **authorized security research and educational purposes only**. Reverse engineering software may be subject to legal restrictions depending on your jurisdiction, licensing agreements, and applicable laws (e.g., DMCA, CFAA). Always ensure you have proper authorization before analyzing any software.
+Static analysis, dynamic instrumentation, disassemblers, debuggers, and RE workflows. For deeper coverage of binary analysis frameworks (angr, Qiling, PANDA, miasm, etc.) see [Binary Analysis](binary-analysis.md).
 
 ---
 
 ## Table of Contents
-
-1. [What is Reverse Engineering?](#1-what-is-reverse-engineering)
-2. [x64dbg](#2-x64dbg)
-3. [Ghidra](#3-ghidra)
-4. [Frida](#4-frida)
-5. [IDA Pro](#5-ida-pro)
-6. [Comparison Table](#6-comparison-table)
-7. [See Also](#7-see-also)
-
----
-
-## 1. What is Reverse Engineering?
-
-Reverse engineering (RE) is the process of analyzing software or hardware to understand its design, functionality, and behavior without access to the original source code or documentation. In cybersecurity, RE is a critical skill for malware analysis, vulnerability research, exploit development, and software security auditing.
-
-### 1.1 Static vs Dynamic Analysis
-
-| Approach | Description | Tools | Advantages | Disadvantages |
-|----------|-------------|-------|------------|---------------|
-| **Static Analysis** | Examining code/binary without executing it | Ghidra, IDA Pro, radare2, strings, objdump | Safe (no execution), full code coverage | Obfuscation/packing can hinder analysis, no runtime context |
-| **Dynamic Analysis** | Observing the program during execution | x64dbg, Frida, strace, Process Monitor | See actual runtime behavior, bypass obfuscation | Risk of executing malicious code, may miss code paths |
-
-Most real-world analysis combines both approaches: static analysis to understand structure, dynamic analysis to observe behavior and confirm hypotheses.
-
-### 1.2 Common Targets
-
-- **Malware:** Understanding capabilities, C2 communication, persistence mechanisms, indicators of compromise (IOCs)
-- **Binaries:** Vulnerability research in compiled applications, patch diffing, protocol analysis
-- **Firmware:** Embedded device analysis, extracting file systems, finding hardcoded credentials
-- **Mobile Apps:** Android APK and iOS IPA analysis, API endpoint discovery, certificate pinning bypass
-
-### 1.3 Legal Considerations
-
-Reverse engineering legality varies by jurisdiction:
-
-- **United States:** DMCA Section 1201 restricts circumvention of technological protection measures, but has exemptions for security research
-- **European Union:** EU Directive 2009/24/EC allows decompilation for interoperability purposes
-- **General Guidance:** RE for personal learning, interoperability, and authorized security testing is generally permitted; RE to bypass DRM, pirate software, or attack systems without authorization is illegal
-
-Always consult applicable laws and licensing agreements before conducting reverse engineering work.
+1. [Ghidra](#1-ghidra)
+2. [IDA Pro](#2-ida-pro)
+3. [x64dbg](#3-x64dbg)
+4. [Radare2](#4-radare2)
+5. [Binary Ninja](#5-binary-ninja)
+6. [GDB](#6-gdb)
+7. [LLDB](#7-lldb)
+8. [Frida](#8-frida)
+9. [Frida Practical Examples](#9-frida-practical-examples)
+10. [RE Workflow Reference](#10-re-workflow-reference)
+11. [Platform-Specific Notes](#11-platform-specific-notes)
 
 ---
 
-## 2. x64dbg
-
-### 2.1 Overview
-
-x64dbg is an open-source user-mode debugger for Windows, designed for analyzing 32-bit and 64-bit executables. It provides a modern, extensible interface and has become the go-to alternative to OllyDbg for Windows debugging.
-
-- **Website:** https://x64dbg.com
-- **Source:** https://github.com/x64dbg/x64dbg
-- **License:** GPLv3
-- **Platform:** Windows only
-
-### 2.2 Installation
-
-Download the latest release from the official website or GitHub. Extract the archive and run `x96dbg.exe` for the launcher, which provides both `x32dbg.exe` (32-bit) and `x64dbg.exe` (64-bit) debuggers.
-
-```bash
-# No traditional install needed — portable application
-# Extract and run:
-# x96dbg.exe   -> Launcher (selects x32 or x64)
-# x32/x32dbg.exe -> 32-bit debugger
-# x64/x64dbg.exe -> 64-bit debugger
-```
-
-### 2.3 UI Overview
-
-The x64dbg interface is organized into key panels:
-
-- **CPU View:** Disassembly, registers, stack, and dump side by side
-- **Stack View:** Call stack and stack contents
-- **Memory Map:** All loaded modules and memory regions
-- **Breakpoints:** Hardware, software, and conditional breakpoints
-- **References:** Cross-references and search results
-- **Call Stack:** Function call trace
-
-### 2.4 Basic Workflow
-
-1. **Load Binary:** File -> Open or drag and drop the executable
-2. **Set Breakpoints:** Right-click on an instruction -> Breakpoint -> Toggle, or press F2
-3. **Run:** Press F9 to run to the next breakpoint
-4. **Step Through:** F7 (step into), F8 (step over), Ctrl+F9 (run to return)
-5. **Inspect Memory:** Follow addresses in dump, examine stack values
-6. **Patch:** Modify instructions in-place for testing (Assemble with Space key)
-
-### 2.5 Plugin Ecosystem
-
-x64dbg supports a rich plugin ecosystem:
-
-- **ScyllaHide:** Anti-anti-debug plugin (hides debugger from detection)
-- **xAnalyzer:** Extended analysis plugin for better function recognition
-- **SharpOD:** Advanced anti-debug bypass
-- **Multiline Ultimate Assembler:** Inline assembler for patching
-- Plugin manager available at: https://github.com/x64dbg/x64dbg/wiki/Plugins
-
-### 2.6 x32dbg vs x64dbg
-
-| Feature | x32dbg | x64dbg |
-|---------|--------|--------|
-| **Architecture** | 32-bit (x86) processes | 64-bit (x86_64) processes |
-| **Use Case** | Legacy apps, 32-bit malware | Modern 64-bit applications |
-| **Interface** | Identical | Identical |
-| **Plugins** | Shared ecosystem | Shared ecosystem |
-
-Use x32dbg for 32-bit targets and x64dbg for 64-bit targets. The launcher (`x96dbg.exe`) automatically selects the correct version.
-
----
-
-## 3. Ghidra
-
-### 3.1 Overview
-
-Ghidra is a free, open-source software reverse engineering framework developed by the NSA (National Security Agency). Released publicly in 2019, it provides comprehensive disassembly, decompilation, and analysis capabilities rivaling commercial tools.
+## 1. Ghidra
 
 - **Website:** https://ghidra-sre.org
-- **Source:** https://github.com/NationalSecurityAgency/ghidra
+- **Developer:** NSA (open-sourced 2019)
 - **License:** Apache 2.0
-- **Platforms:** Windows, Linux, macOS
+- **Platform:** Windows, Linux, macOS (Java-based)
+- **Price:** Free
 
-### 3.2 Installation
+The NSA's internal reverse engineering suite, open-sourced in 2019. Ghidra is a full-featured disassembler + decompiler + analysis platform. Its decompiler output is competitive with IDA Pro's Hex-Rays at no cost, making it the default choice for most open-source RE work.
 
-Ghidra requires a Java Development Kit (JDK 17+).
+### Features
 
-```bash
-# Install Java (Ubuntu/Debian)
-sudo apt install openjdk-17-jdk
+- Multi-architecture decompiler (x86, ARM, MIPS, PPC, RISC-V, 68k...)
+- Code browser with cross-references, call graphs, type inference
+- Multi-user collaboration (shared project server)
+- Version tracking — track changes to analysis over time
+- Script API in Java and Python (Jython)
+- Scripting console for automation
+- Symbol importation from PDB files
+- DWARF debug info parsing
+- Headless analysis mode (automation without GUI)
 
-# Download Ghidra from the official GitHub releases
-# https://github.com/NationalSecurityAgency/ghidra/releases
-
-# Extract and run
-unzip ghidra_*.zip
-cd ghidra_*
-./ghidraRun
-```
-
-### 3.3 Project Setup and Code Browser
-
-1. **Create a Project:** File -> New Project -> Non-Shared Project
-2. **Import Binary:** File -> Import File -> select target binary
-3. **Auto-Analysis:** When prompted, accept default analyzers (or customize)
-4. **Code Browser:** Double-click the imported file to open the main analysis window
-
-The Code Browser contains:
-
-- **Listing View:** Disassembly with labels, cross-references, and comments
-- **Decompiler Window:** Pseudo-C output from the decompiler (side by side with assembly)
-- **Symbol Tree:** Functions, labels, classes, namespaces
-- **Data Type Manager:** Structures, enums, typedefs
-- **Function Graph:** Visual control flow graph of the selected function
-
-### 3.4 Key Analysis Features
-
-- **Auto-Analysis:** Identifies functions, strings, data types, and cross-references automatically
-- **Function Identification:** Signature matching against known libraries (FID — Function ID)
-- **Cross-References (XREFs):** Navigate where functions and data are called/used
-- **Type Propagation:** Infer and apply data types throughout the binary
-- **Diffing:** Compare two binaries to identify changes (Version Tracking)
-
-### 3.5 Ghidra Scripting
-
-Ghidra supports scripting in Java and Python (Jython) for automating analysis tasks.
-
-```python
-# Ghidra Python script: List all functions in the binary
-from ghidra.program.model.listing import FunctionManager
-
-fm = currentProgram.getFunctionManager()
-funcs = fm.getFunctions(True)
-for func in funcs:
-    print("Function: {} at {}".format(func.getName(), func.getEntryPoint()))
-```
+### Installation and Usage
 
 ```bash
-# Run Ghidra in headless mode for batch/automated analysis
-./analyzeHeadless /path/to/project MyProject \
-  -import /path/to/binary \
-  -postScript MyScript.py \
+# Download from https://ghidra-sre.org
+# Requires Java 17+
+
+# Launch
+./ghidraRun             # Linux/macOS
+ghidraRun.bat           # Windows
+
+# Headless analysis
+./support/analyzeHeadless /path/to/project ProjectName \
+  -import ./binary \
+  -postScript MyAnalysisScript.java \
   -scriptPath /path/to/scripts
 ```
 
-### 3.6 Headless Mode
+### Ghidra Python Scripting (Jython)
 
-Headless mode allows batch processing without the GUI — useful for CI/CD pipelines, automated malware triage, and large-scale analysis. Scripts can import, analyze, and export results programmatically.
+```python
+# Run from Script Manager or headless mode
+from ghidra.program.model.symbol import SymbolType
+from ghidra.app.decompiler import DecompInterface
+
+# List all functions
+fm = currentProgram.getFunctionManager()
+for func in fm.getFunctions(True):
+    print(func.getName(), func.getEntryPoint())
+
+# Decompile a function
+decomp = DecompInterface()
+decomp.openProgram(currentProgram)
+func = getGlobalFunctions("main")[0]
+result = decomp.decompileFunction(func, 30, monitor)
+print(result.getDecompiledFunction().getC())
+
+# Find all strings referencing "password"
+for s in currentProgram.getListing().getDefinedData(True):
+    if hasattr(s, 'getValue') and "password" in str(s.getValue()).lower():
+        print(s.getAddress(), s.getValue())
+
+# Rename a function
+func = getFunctionAt(toAddr(0x401234))
+func.setName("decrypt_payload", SourceType.USER_DEFINED)
+
+# Add comment
+setPlateComment(toAddr(0x401234), "Key derivation starts here")
+```
 
 ---
 
-## 4. Frida
+## 2. IDA Pro
 
-### 4.1 Overview
+- **Website:** https://hex-rays.com
+- **License:** Commercial (IDA Free available for limited use)
+- **Type:** Industry-standard disassembler and decompiler
 
-Frida is a dynamic instrumentation toolkit that lets you inject JavaScript (or other languages) into running processes on Windows, macOS, Linux, iOS, Android, and QNX. It is widely used for mobile application analysis, API monitoring, and security research.
+IDA Pro is the industry standard, used extensively in professional malware analysis and vulnerability research. Its Hex-Rays decompiler produces high-quality pseudocode. IDA Free (limited version) is available for non-commercial use.
 
-- **Website:** https://frida.re
-- **Source:** https://github.com/frida/frida
-- **License:** wxWindows Library Licence
+### Key Concepts
 
-### 4.2 Installation
+```
+IDA database (.idb / .i64):
+  Stores all analysis — functions, names, comments, types
+  Load once, annotate over time
 
-```bash
-# Install Frida tools via pip
-pip install frida-tools
+Navigation:
+  G — Go to address
+  N — Rename (function, variable, label)
+  : — Add comment
+  ; — Add repeatable comment
+  Y — Set type (for function signature or variable)
+  H — Toggle hex/decimal
+  X — Cross-references TO this item
+  Ctrl+X — Cross-references FROM this item
 
-# Verify installation
-frida --version
-
-# Install Frida Python bindings (if needed separately)
-pip install frida
+Views:
+  IDA View — disassembly
+  Pseudocode (F5) — decompiler output (Hex-Rays license)
+  Structures — type definitions
+  Enums — enumeration types
+  Imports / Exports
+  Strings — all string literals
+  Functions — full function list
 ```
 
-### 4.3 JavaScript API for Hooking
+### IDAPython
 
-Frida uses a JavaScript API to hook and intercept function calls at runtime.
+```python
+import idc, idautils, idaapi
+
+# List all functions
+for func in idautils.Functions():
+    print(hex(func), idc.get_func_name(func))
+
+# Get disassembly
+for insn in idautils.FuncItems(here()):
+    print(hex(insn), idc.GetDisasm(insn))
+
+# Rename function
+idc.set_name(0x401234, "decrypt_payload", idc.SN_CHECK)
+
+# Add comment
+idc.set_cmt(0x401234, "Key derivation", 0)
+
+# Cross-references TO address
+for ref in idautils.CodeRefsTo(0x401234, False):
+    print(hex(ref))
+
+# Patch bytes
+idc.patch_byte(0x401234, 0x90)   # NOP
+idc.patch_bytes(0x401234, b'\x90\x90\x90')
+
+# Read/write memory
+data = idc.get_bytes(0x401234, 16)
+```
+
+---
+
+## 3. x64dbg
+
+- **Website:** https://x64dbg.com
+- **License:** MIT
+- **Platform:** Windows only
+- **Download:** https://github.com/x64dbg/x64dbg/releases
+
+The standard open-source Windows user-mode debugger. Covers both x64 (x64dbg.exe) and x86 (x32dbg.exe). See [Binary Analysis](binary-analysis.md) for detailed coverage.
+
+### Quick Reference
+
+```
+F7    Step into (instruction level)
+F8    Step over
+F9    Run
+F2    Toggle software breakpoint
+Ctrl+F2  Restart
+Alt+F9   Execute until return
+Ctrl+G   Go to address
+Ctrl+B   Memory breakpoints view
+Spacebar  Assemble at cursor (patch)
+Right-click → Follow in dump/disassembler/stack
+
+Key plugins:
+  ScyllaHide     — Anti-anti-debug bypass
+  xAnalyzer      — Automatic function analysis
+  ret-sync       — Sync with IDA/Ghidra/Binary Ninja
+  Strings        — Enhanced string extraction
+  APIBreak       — Break on specific Windows API calls
+```
+
+### ScyllaHide — Anti-Anti-Debug
+
+```
+Most packers and malware detect debuggers via:
+  IsDebuggerPresent() → PEB.BeingDebugged flag
+  CheckRemoteDebuggerPresent()
+  NtQueryInformationProcess(ProcessDebugPort)
+  Timing checks (RDTSC)
+  Heap flags / Heap Force Flags in PEB
+  Exception handling quirks
+  Parent process name check
+
+ScyllaHide bypasses all of these transparently.
+Install: drop ScyllaHide.dp64 into x64dbg plugins folder
+```
+
+---
+
+## 4. Radare2
+
+- **Repository:** https://github.com/radareorg/radare2
+- **License:** LGPL v3
+- **Type:** Complete RE framework (CLI)
+
+See [Binary Analysis](binary-analysis.md) for full coverage including r2pipe Python API. Quick command reference:
+
+```bash
+r2 -A ./binary        # Open and auto-analyze
+
+# Essential commands
+afl           # List functions
+pdf @main     # Disassemble main
+iz            # List strings
+ii            # Imports
+iS            # Sections
+s 0x401234    # Seek to address
+V             # Visual mode  (VV for graph)
+db 0x401234   # Breakpoint (debug mode: r2 -d ./binary)
+dc            # Continue
+dr            # Registers
+```
+
+---
+
+## 5. Binary Ninja
+
+- **Website:** https://binary.ninja
+- **Free tier:** https://cloud.binary.ninja
+- **Type:** Commercial disassembler + decompiler with Python API
+
+Multi-level IL (LLIL → MLIL → HLIL) with clean Python API. See [Binary Analysis](binary-analysis.md) for full Python API coverage.
+
+```python
+import binaryninja as bn
+
+bv = bn.open_view("./binary")
+bv.update_analysis_and_wait()
+
+# Decompile function
+for func in bv.functions:
+    for insn in func.hlil.instructions:
+        print(insn)
+
+# Find all calls to malloc
+malloc_sym = bv.get_symbol_by_raw_name("malloc")
+if malloc_sym:
+    for ref in bv.get_code_refs(malloc_sym.address):
+        print(hex(ref.address), ref.function.name)
+```
+
+---
+
+## 6. GDB
+
+See [Binary Analysis](binary-analysis.md) for full GDB reference including Python API, pwndbg/GEF setup, and all commands.
+
+**Essential quick reference:**
+
+```bash
+gdb ./binary
+(gdb) break main; run
+(gdb) ni / si                 # Next instruction / step into
+(gdb) x/10i $rip              # Examine instructions at RIP
+(gdb) info registers
+(gdb) x/20wx $rsp             # Stack contents
+(gdb) bt                      # Backtrace
+(gdb) layout asm              # TUI mode
+```
+
+---
+
+## 7. LLDB
+
+See [Binary Analysis](binary-analysis.md) for full LLDB reference. Default debugger on macOS/Xcode.
+
+```bash
+lldb ./binary
+(lldb) breakpoint set --name main
+(lldb) process continue
+(lldb) register read
+(lldb) memory read --format x --count 20 $sp
+(lldb) disassemble --name main
+(lldb) bt
+```
+
+---
+
+## 8. Frida
+
+- **Website:** https://frida.re
+- **Repository:** https://github.com/frida/frida
+- **License:** wxWindows Library Licence (permissive)
+- **Type:** Dynamic instrumentation toolkit
+- **Platforms:** Windows, macOS, Linux, iOS, Android
+
+Frida injects JavaScript into running processes, letting you hook functions, intercept arguments and return values, modify memory, and call arbitrary functions — all at runtime without recompiling.
+
+### Installation
+
+```bash
+pip install frida-tools
+pip install frida
+
+# Android: push frida-server to device
+adb push frida-server-16.x.x-android-arm64 /data/local/tmp/frida-server
+adb shell chmod +x /data/local/tmp/frida-server
+adb shell /data/local/tmp/frida-server &
+```
+
+### Core Concepts
 
 ```javascript
-// Hook a native function (e.g., open() on Linux)
-Interceptor.attach(Module.findExportByName(null, "open"), {
+// Interceptor.attach: hook a function
+Interceptor.attach(Module.findExportByName("libc.so", "open"), {
     onEnter: function(args) {
-        console.log("open() called with: " + Memory.readUtf8String(args[0]));
+        // Called when function is entered
+        console.log("open() called with path: " + args[0].readUtf8String());
+        this.path = args[0].readUtf8String();  // save for onLeave
     },
     onLeave: function(retval) {
-        console.log("open() returned: " + retval);
+        // Called when function returns
+        console.log("open() returned fd: " + retval.toInt32());
+        // Modify return value:
+        // retval.replace(ptr(-1));  // make it fail
     }
+});
+
+// Hook by address
+var target_addr = ptr("0x401234");
+Interceptor.attach(target_addr, {
+    onEnter: function(args) {
+        console.log("Hit 0x401234");
+        console.log("arg0 = " + args[0]);
+        console.log("RIP = " + this.context.rip);
+    }
+});
+
+// Read / write memory
+var addr = ptr("0x402000");
+var data = addr.readByteArray(16);
+addr.writeByteArray([0x90, 0x90, 0x90]);   // Write NOPs
+console.log(hexdump(addr, { length: 32 }));
+
+// Call a function directly
+var func = new NativeFunction(ptr("0x401234"), 'int', ['int', 'pointer']);
+var result = func(42, Memory.allocUtf8String("hello"));
+```
+
+### Frida CLI Tools
+
+```bash
+# List running processes
+frida-ps
+
+# Android: list apps
+frida-ps -U         # USB device
+frida-ps -U -a      # All apps (including background)
+
+# Attach to process
+frida -p PID script.js
+frida -n "process_name" script.js
+frida -U -f "com.app.id" script.js   # Spawn Android app
+
+# REPL mode (interactive)
+frida -p PID
+> Module.findExportByName(null, "malloc")
+> Process.enumerateModules()
+
+# Run a script
+frida -p PID -l my_script.js --no-pause
+
+# Trace function calls
+frida-trace -n Chrome -i "open"          # Trace libc open
+frida-trace -n Chrome -i "Crypto*"       # Wildcard trace
+frida-trace -U -f com.app.id -i "Java.*" # Android Java
+```
+
+---
+
+## 9. Frida Practical Examples
+
+### Android SSL Pinning Bypass
+
+```javascript
+// Bypass certificate pinning in Android apps
+Java.perform(function() {
+    // TrustManager bypass
+    var TrustManager = Java.registerClass({
+        name: "com.bypass.TrustManager",
+        implements: [Java.use("javax.net.ssl.X509TrustManager")],
+        methods: {
+            checkClientTrusted: function(chain, authType) {},
+            checkServerTrusted: function(chain, authType) {},
+            getAcceptedIssuers: function() { return []; }
+        }
+    });
+
+    var SSLContext = Java.use("javax.net.ssl.SSLContext");
+    SSLContext.init.overload(
+        "[Ljavax.net.ssl.KeyManager;",
+        "[Ljavax.net.ssl.TrustManager;",
+        "java.security.SecureRandom"
+    ).implementation = function(km, tm, sr) {
+        this.init(km, [TrustManager.$new()], sr);
+    };
+
+    // OkHttp pinning bypass
+    try {
+        var CertificatePinner = Java.use("okhttp3.CertificatePinner");
+        CertificatePinner.check.overload("java.lang.String", "java.util.List")
+            .implementation = function(hostname, peerCertificates) {
+                console.log("Bypassed OkHttp cert pin for: " + hostname);
+            };
+    } catch(e) {}
 });
 ```
 
-### 4.4 Use Cases
-
-- **Android App Analysis:** Hook Java methods, bypass certificate pinning, extract encryption keys
-- **iOS Analysis:** Bypass jailbreak detection, intercept Objective-C messages
-- **Windows:** Hook Win32 API calls, monitor registry access, trace crypto operations
-- **Linux:** Trace system calls, intercept library functions, analyze server applications
-
-### 4.5 Frida-Server Setup on Android
-
-```bash
-# Download frida-server for Android (match your device architecture)
-# https://github.com/frida/frida/releases
-# Example: frida-server-16.x.x-android-arm64
-
-# Push to device
-adb push frida-server-arm64 /data/local/tmp/frida-server
-adb shell "chmod 755 /data/local/tmp/frida-server"
-adb shell "/data/local/tmp/frida-server &"
-
-# List running processes on the device
-frida-ps -U
-
-# Attach to a specific app
-frida -U -n "com.example.app"
-```
-
-### 4.6 Example: Hook a Java Method on Android
+### Hook Java Method (Android)
 
 ```javascript
 Java.perform(function() {
-    var Activity = Java.use('com.example.app.MainActivity');
-    Activity.secretFunction.implementation = function() {
-        console.log('Function called!');
-        return this.secretFunction();
+    var Activity = Java.use("android.app.Activity");
+    Activity.onCreate.overload("android.os.Bundle").implementation = function(bundle) {
+        console.log("Activity.onCreate called: " + this.getClass().getName());
+        this.onCreate(bundle);
+    };
+
+    // Hook string decrypt function
+    var DecryptClass = Java.use("com.app.crypto.Decrypt");
+    DecryptClass.decrypt.overload("java.lang.String").implementation = function(ciphertext) {
+        var result = this.decrypt(ciphertext);
+        console.log("Decrypted: " + ciphertext + " → " + result);
+        return result;
     };
 });
 ```
 
-```bash
-# Run a Frida script against an Android app
-frida -U -l hook_script.js -n "com.example.app"
+### Trace All Native Calls
 
-# Spawn and hook from the start
-frida -U -l hook_script.js -f com.example.app --no-pause
+```javascript
+// Trace every function call in a library
+Process.enumerateModules().forEach(function(mod) {
+    if (mod.name.includes("target_library")) {
+        mod.enumerateExports().forEach(function(exp) {
+            if (exp.type === "function") {
+                Interceptor.attach(exp.address, {
+                    onEnter: function(args) {
+                        console.log("[+] " + exp.name + " called");
+                    }
+                });
+            }
+        });
+    }
+});
 ```
-
-### 4.7 Additional Frida Tools
-
-- **frida-trace:** Automatically generate hooks for matching functions
-- **frida-discover:** Discover internal functions in a running process
-- **frida-ls-devices:** List all connected Frida-capable devices
-- **Objection:** Runtime mobile exploration toolkit built on Frida (https://github.com/sensepost/objection)
 
 ---
 
-## 5. IDA Pro
+## 10. RE Workflow Reference
 
-### 5.1 Overview
+### Static Analysis Workflow
 
-IDA Pro (Interactive Disassembler) is the industry-standard commercial disassembler and debugger. It has been the dominant tool in reverse engineering since the 1990s and is used by security researchers, government agencies, and malware analysts worldwide.
+```
+1. Identify binary type
+   file ./binary                      # ELF/PE/Mach-O, arch, stripped?
+   strings ./binary | grep -i pass    # Quick string recon
+   objdump -f ./binary                # File headers
 
-- **Website:** https://hex-rays.com/ida-pro/
-- **Developer:** Hex-Rays
-- **Platforms:** Windows, Linux, macOS
+2. Import into disassembler
+   Ghidra: create project → import → auto-analyze → decompile
+   IDA: open file → auto-analyze → F5 for pseudocode
+   Binary Ninja: open file → analysis completes → view HLIL
 
-### 5.2 IDA Free vs IDA Pro vs IDA Home
+3. Orient yourself
+   Check main() or entry point
+   Check imports — what APIs does it use?
+   Check strings — hardcoded IPs, URLs, keys, debug messages
+   Check for anti-debug / anti-analysis code
 
-| Feature | IDA Free | IDA Home | IDA Pro |
-|---------|----------|----------|---------|
-| **Price** | Free | ~$365/year | ~$1,400+/year |
-| **Architectures** | x86, x64, ARM, MIPS | x86, x64, ARM, MIPS | 40+ processors |
-| **Decompiler** | Cloud-based (limited) | Local (x86/x64/ARM) | Full Hex-Rays decompiler |
-| **Debugging** | Local only | Local only | Local + remote debugging |
-| **Plugins** | Limited | Full support | Full support |
-| **Commercial Use** | No | No | Yes |
+4. Understand the core logic
+   Follow data flow from user input
+   Look for crypto (high entropy data, math patterns)
+   Look for network communication
+   Rename functions as you understand them
 
-### 5.3 Basic Workflow
-
-1. **Load Binary:** Drag and drop or File -> Open, IDA auto-detects format and architecture
-2. **Initial Analysis:** IDA performs auto-analysis (function identification, string detection, type inference)
-3. **Navigate:** Use the Functions window, Names window, or press G to go to an address
-4. **Cross-References (XREFs):** Press X on any symbol to see all references to it
-5. **Rename:** Press N to rename functions and variables for clarity
-6. **Comment:** Press ; (repeatable) or : (non-repeatable) to add comments
-7. **Graph View:** Press Space to toggle between linear and graph view
-
-### 5.4 IDAPython Scripting
-
-IDA Pro includes a powerful Python scripting interface for automating analysis.
-
-```python
-# IDAPython: Find all calls to a specific function
-import idautils
-import idc
-
-target_func = "CreateFileW"
-for addr in idautils.CodeRefsTo(idc.get_name_ea_simple(target_func), 0):
-    func_name = idc.get_func_name(addr)
-    print(f"Call to {target_func} from {func_name} at {hex(addr)}")
+5. Document findings
+   Comment addresses, rename functions
+   Save disassembler database
 ```
 
-```python
-# IDAPython: Rename functions matching a pattern
-import idautils
-import ida_funcs
+### Dynamic Analysis Workflow
 
-for func_ea in idautils.Functions():
-    func = ida_funcs.get_func(func_ea)
-    name = ida_funcs.get_func_name(func_ea)
-    if name.startswith("sub_"):
-        # Custom logic to identify and rename functions
-        print(f"Unnamed function at {hex(func_ea)}")
 ```
+1. Set up isolated environment
+   VM (VMware/VirtualBox) isolated from network
+   Snapshot before running
 
-### 5.5 Hex-Rays Decompiler
+2. Monitor before running
+   Process Monitor (Windows) — watch file/registry/network
+   Wireshark/Zeek — capture network traffic
+   Procmon — API calls
 
-The Hex-Rays decompiler transforms assembly code into readable pseudo-C code. Press F5 on any function to decompile. The decompiler supports:
+3. Run the target
+   Execute with debugger attached (x64dbg/GDB)
+   Set breakpoints at: CreateFile, WriteFile, connect, CreateProcess
 
-- Variable type recovery and renaming
-- Structure reconstruction
-- Interactive refinement (change types, rename variables in decompiled view)
-- Output synchronization with the disassembly view
+4. Observe behavior
+   What files does it create/modify?
+   What network connections?
+   What processes spawned?
+   What registry keys touched?
+
+5. Deep dive with Frida
+   Hook interesting functions found in static analysis
+   Capture decrypted strings, keys, plaintext network data
+```
 
 ---
 
-## 6. Comparison Table
+## 11. Platform-Specific Notes
 
-| Tool | Type | Platform | Open Source | Best For | Price |
-|------|------|----------|-------------|----------|-------|
-| **x64dbg** | Debugger | Windows | Yes (GPLv3) | Windows binary debugging, malware analysis | Free |
-| **Ghidra** | Disassembler / Decompiler | Windows, Linux, macOS | Yes (Apache 2.0) | Static RE, multi-architecture analysis | Free |
-| **Frida** | Dynamic Instrumentation | Cross-platform | Yes (wxWindows) | Mobile app analysis, runtime hooking | Free |
-| **IDA Pro** | Disassembler / Debugger | Windows, Linux, macOS | No (Proprietary) | Professional RE, malware analysis | $1,400+/year |
-| **IDA Free** | Disassembler | Windows, Linux, macOS | No (Freeware) | Basic static analysis, learning | Free |
-| **radare2** | RE Framework | Cross-platform | Yes (LGPLv3) | CLI-based analysis, scripting | Free |
-| **Binary Ninja** | Disassembler / Decompiler | Windows, Linux, macOS | No (Proprietary) | Modern UI, IL-based analysis | $299+ |
+### Windows Malware RE Checklist
+
+```
+Static:
+  pefile — check imports (suspicious: VirtualAlloc, WriteProcessMemory, CreateRemoteThread)
+  strings — look for URLs, IPs, mutex names, registry keys
+  entropy analysis — high entropy sections = packed/encrypted
+  Authenticode signature check: sigcheck.exe (Sysinternals)
+
+Dynamic (x64dbg):
+  ScyllaHide enabled
+  Break on: CreateProcess, VirtualAlloc+WriteProcessMemory (injection)
+  Break on: WSAConnect, connect (network)
+  Break on: CryptDecrypt, CryptImportKey (crypto)
+  Watch: PEB traversal (manual DLL resolution)
+```
+
+### Android APK RE Checklist
+
+```
+Static:
+  apktool d app.apk      # Decompile to Smali
+  jadx-gui app.apk       # Java decompilation (better than dex2jar)
+  grep -r "password\|key\|secret" ./   # Find hardcoded secrets
+  Check AndroidManifest.xml — permissions, activities, providers
+
+Dynamic (Frida):
+  SSL pinning bypass
+  Hook SharedPreferences (sensitive data storage)
+  Hook crypto functions
+  Hook network (OkHttp, Retrofit)
+  Use objection: objection -g com.app.id explore
+```
 
 ---
 
-## 7. See Also
+## See Also
 
-- [Penetration Testing Tools](penetration-testing-tools.md) — Core tools for network and application security testing
-- [Web Application Security](web-application-security.md) — OWASP, training platforms, and web security resources
+- [Binary Analysis](binary-analysis.md) — angr, Qiling, PANDA, GDB/LLDB in depth, MemProcFS
+- [Exploit Development](exploit-development.md) — Using RE for vulnerability research
+- [Drivers & DLLs](../fundamentals/drivers-and-dlls.md) — PE/ELF format internals
+- [Compilers & Interpreters](../fundamentals/compilers-and-interpreters.md) — What the disassembler sees
