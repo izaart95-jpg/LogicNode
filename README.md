@@ -163,6 +163,15 @@ Clients, bots, and servers for Minecraft Java Edition.
 | [Glazed Client](minecraft/glazed-client.md) | Glazed — injection-based paid client, module list, multi-version support |
 | [Servers](minecraft/servers.md) | FakePixel (free Hypixel alternative), 2b2t, Hypixel, MineMenClub |
 
+### Torrenting
+BitTorrent technology, torrent indexing sites, and download clients.
+
+| Document | Description |
+|----------|-------------|
+| [BitTorrent Technology](torrenting/bittorrent-technology.md) | Protocol deep dive — .torrent structure, info hashes, magnet links, DHT, PEX, piece selection, choking, MSE encryption, BitTorrent v2 |
+| [Torrent Sites](torrenting/torrent-sites.md) | TPB, 1337x, YTS, RARBG (dead — documented), Torlock, LimeTorrents, KickassTorrents, ETTV, TorrentGalaxy, Torrends.to, Appdoze |
+| [Deluge](torrenting/deluge.md) | Deluge BitTorrent client — daemon/client architecture, Web UI, plugins, Docker, VPN kill switch, comparison with qBittorrent |
+
 ### Reference
 Storage platforms, URL tools, communities, and quick-reference directories.
 
@@ -182,8 +191,8 @@ Storage platforms, URL tools, communities, and quick-reference directories.
 
 | Metric | Value |
 |--------|-------|
-| **Total Documents** | 90 |
-| **Categories** | 14 |
+| **Total Documents** | 93 |
+| **Categories** | 15 |
 | **Topics Covered** | Kernels, Linux Internals, CPU/GPU Architecture, Rasterization, Ray Tracing, CUDA, Compilers, Assembly, Drivers, DLLs, OS Theory, Protocols, Virtualization, Networking, Security, RE, Binary Analysis, Exploit Development, Active Directory, Offensive Frameworks, Network Analysis, Zeek, Fingerprinting, OPSEC, IoT, Mobile, Android Debloating, AI, Video AI, Coding Agents, Docker, Kubernetes, Automation, Deployment, Media, Email, File Storage, Video Streaming, Anime, Manga, Self-Hosted Media, Minecraft Clients, Minecraft Servers, URL Shorteners, Hacker Roadmap |
 
 ---
