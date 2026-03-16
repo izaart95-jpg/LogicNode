@@ -371,7 +371,7 @@ startxfce4 -- -dpi 120
 
 ---
 
-## 4. Canta — Rootless Android Debloater
+## 4. Canta 
 
 - **Repository:** https://github.com/samolego/Canta
 - **License:** LGPL-3.0
