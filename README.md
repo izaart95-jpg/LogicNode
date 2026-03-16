@@ -105,6 +105,7 @@ Development environments, coding agents, terminals, and frameworks.
 | [Figma](devtools/figma.md) | Design platform — dev mode, prototyping, plugins |
 | [Frameworks & Libraries](devtools/frameworks-and-libraries.md) | PyTorch, Mineflayer, minecraft-protocol, go-mc |
 | [APIs & Resources](devtools/apis-and-resources.md) | REST, GraphQL, API authentication, GitHub API, public APIs, MineSkin |
+| [Version Control](devtools/version-control.md) | Bitbucket, GitHub, GitLab — pipelines, REST APIs, CLI tools, self-hosting, Git essentials |
 
 ### Automation
 Web scraping, browser automation, and workflow tools.
@@ -181,7 +182,7 @@ Storage platforms, URL tools, communities, and quick-reference directories.
 
 | Metric | Value |
 |--------|-------|
-| **Total Documents** | 89 |
+| **Total Documents** | 90 |
 | **Categories** | 14 |
 | **Topics Covered** | Kernels, Linux Internals, CPU/GPU Architecture, Rasterization, Ray Tracing, CUDA, Compilers, Assembly, Drivers, DLLs, OS Theory, Protocols, Virtualization, Networking, Security, RE, Binary Analysis, Exploit Development, Active Directory, Offensive Frameworks, Network Analysis, Zeek, Fingerprinting, OPSEC, IoT, Mobile, Android Debloating, AI, Video AI, Coding Agents, Docker, Kubernetes, Automation, Deployment, Media, Email, File Storage, Video Streaming, Anime, Manga, Self-Hosted Media, Minecraft Clients, Minecraft Servers, URL Shorteners, Hacker Roadmap |
 
