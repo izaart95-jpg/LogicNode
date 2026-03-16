@@ -370,6 +370,69 @@ startxfce4 -- -dpi 120
 
 ---
 
+## 4. Canta — Rootless Android Debloater
+
+- **Repository:** https://github.com/samolego/Canta
+- **License:** LGPL-3.0
+- **Requires:** Shizuku (see Shizuku section above)
+- **Android:** 9.0+ (SDK 28+)
+- **Download:** F-Droid, IzzyOnDroid, GitHub Releases
+- **Stars:** 4.3k+
+
+### Overview
+
+Canta lets you uninstall any pre-installed or user app without root, using Shizuku's privileged ADB shell to call `pm uninstall --user 0 <package>`. It integrates with the Universal Android Debloater (UAD) list to tag packages with safety recommendations — telling you whether removing a package is Safe, Recommended, Expert-only, or Unsafe.
+
+No PC, no ADB USB cable, no root required. Everything runs on-device once Shizuku is active.
+
+### Installation
+
+```
+1. Install and activate Shizuku (see Shizuku section above)
+2. Install Canta:
+   F-Droid:     https://f-droid.org/packages/io.github.samolego.canta/
+   IzzyOnDroid: https://apt.izzysoft.de/fdroid/index/apk/io.github.samolego.canta
+   GitHub:      https://github.com/samolego/Canta/releases/latest
+3. Open Canta → grant Shizuku permission when prompted
+4. Browse or search the app list
+5. Tap the trash icon on any app to uninstall
+```
+
+### Features
+
+- **UAD list integration:** Each app shows a safety tag from the Universal Debloater Alliance database — green (safe to remove), yellow (caution), red (system-critical)
+- **Uninstall for current user only:** Uses `--user 0` — the app is hidden/disabled rather than permanently deleted from all users. Factory reset restores it.
+- **View previously uninstalled apps:** Canta tracks what it removed and shows a "Restore" list — you can reinstall any debloated package without a factory reset
+- **Search and filter:** Filter by safety level, installed/uninstalled state, or search by name/package
+- **No permanent bricking:** Since removal is per-user (not system-wide `pm uninstall`), critical mistakes are recoverable. If you cause a bootloop: factory reset restores all system apps.
+- **APK verification:** Releases are signed; verify with SHA-256 fingerprint `0A:26:40:31:7C:43:27:21:88:C3:E1:31:94:C1:54:60:69:1F:12:C3:9E:A1:9B:BA:72:7D:D6:7F:B5:62:89:D4`
+
+### Common Debloat Targets
+
+```
+# Safe to remove on most devices:
+com.facebook.appmanager       Facebook App Manager (background updater)
+com.facebook.services         Facebook Services
+com.microsoft.skydrive        OneDrive
+com.google.android.videos     Google Play Movies
+com.google.android.music      Google Play Music
+com.samsung.android.game.gamehome  Samsung Game Launcher
+com.samsung.android.bixby.agent   Bixby
+com.amazon.kindle             Kindle (OEM-installed)
+
+# Caution — may break things:
+com.android.phone             Phone app (breaks calls if removed)
+com.google.android.gms        Google Play Services (breaks almost everything)
+```
+
+### Android 16 Note
+
+Android 16 may require a forked version of Shizuku: https://github.com/thedjchi/Shizuku. Standard Shizuku may not work on Android 16 devices. Check Canta's GitHub issues for current status.
+
+### OPlus / OnePlus / Realme Warning
+
+Some OPlus (OPPO/Realme/OnePlus) system apps are hardened and resist uninstallation even via Shizuku. A tracking issue exists at https://github.com/samolego/Canta/issues/338. For these devices, ADB from PC may be required for stubborn packages.
+
 ## See Also
 
 - [Termux Setup](termux-setup.md) — Terminal setup, packages, FFmpeg, and Tmux
