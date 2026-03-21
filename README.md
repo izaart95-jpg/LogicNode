@@ -25,6 +25,8 @@
 | [Linux Distributions](fundamentals/linux-distributions.md) | RHEL, Debian, Arch — package managers, release cycles |
 | [Network Protocols](fundamentals/network-protocols.md) | OSI model, TCP/UDP/QUIC, HTTP, DNS, TLS, MQTT, BGP, WireGuard, 80+ protocols |
 | [Virtualization](fundamentals/virtualization.md) | WSL, QEMU/KVM, VirtualBox, VMware, Hyper-V |
+| [Wine Compatibility Layer](fundamentals/wine-compatibility.md) | Wine architecture, DXVK, Proton, Lutris, Bottles, Winetricks, prefixes, macOS CrossOver/Whisky/GPTK |
+| [File Systems](fundamentals/file-systems.md) | ext4, Btrfs, ZFS, XFS, NTFS, APFS, FAT32/exFAT, F2FS, tmpfs, FUSE, NFS, procfs — internals + commands |
 | [Storage Technology](fundamentals/storage-technology.md) | NAND flash internals, SD cards, USB pendrives, RAM (DRAM/SRAM/DDR), USB protocol, Thunderbolt, NVMe |
 | [CGI & VFX](fundamentals/cgi-vfx.md) | 3D pipeline, path tracing, PBR shaders, VFX production workflow, compositing, simulation, motion capture, software |
 
@@ -117,6 +119,7 @@
 ### Media
 | Document | Description |
 |----------|-------------|
+| [Creative Software](media/creative-software.md) | Blender (3D+render), DaVinci Resolve (color+edit), Photoshop, Premiere Pro, Filmora, CapCut desktop |
 | [Media Tools](media/media-tools.md) | FFmpeg, VLC, GIMP |
 | [Mobile Creative Tools](media/mobile-creative-tools.md) | CapCut, Alight Motion, CPU-Z |
 | [Image Upscalers](media/imgupscaler.md) | imgupscaler.com, Real-ESRGAN, Upscayl, Waifu2x |
@@ -168,7 +171,7 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Documents** | 102 |
+| **Total Documents** | 105 |
 | **Categories** | 18 |
 
 ---
