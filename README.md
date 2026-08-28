@@ -29,6 +29,7 @@
 | [File Systems](fundamentals/file-systems.md) | ext4, Btrfs, ZFS, XFS, NTFS, APFS, FAT32/exFAT, F2FS, tmpfs, FUSE, NFS, procfs — internals + commands |
 | [Storage Technology](fundamentals/storage-technology.md) | NAND flash internals, SD cards, USB pendrives, RAM (DRAM/SRAM/DDR), USB protocol, Thunderbolt, NVMe |
 | [CGI & VFX](fundamentals/cgi-vfx.md) | 3D pipeline, path tracing, PBR shaders, VFX production workflow, compositing, simulation, motion capture, software |
+| [Ricing & Window Managers](fundamentals/ricing-window-managers.md) | Hyprland, i3wm, bspwm, Awesome WM, niri, sway, dwm — configs, compositors (picom), bars (waybar/polybar), color schemes, dotfiles |
 
 ### Networking
 | Document | Description |
@@ -69,12 +70,11 @@
 | [Offensive Firmware](iot/offensive-firmware.md) | ESP32 Marauder, Bruce Firmware, GhostESP — WiFi/BT security tools, flashing, comparison |
 | [Flipper Zero](iot/flipper-zero.md) | Hardware specs, Sub-GHz, RFID, NFC, IR, BadUSB, GPIO, custom firmware, ESP32 Dev Board |
 | [LilyGo, STM32 & CNC](iot/lilygo-stm32-cnc.md) | T-Deck, T-Embed, STM32 family, G-code, CNC controllers, CAM software |
-| [Espectre Project](iot/projects/espectre/) | ESP32 CSI motion detection — real-time WebSocket dashboard |
+| [Espectre Project](iot/projects/espectre/ESPECTRE_README.md) | ESP32 CSI motion detection — real-time WebSocket dashboard |
 
 ### Mobile
 | Document | Description |
 |----------|-------------|
-| [Ricing & Window Managers](fundamentals/ricing-window-managers.md) | Hyprland, i3wm, bspwm, Awesome WM, niri, sway, dwm — configs, compositors (picom), bars (waybar/polybar), color schemes, dotfiles |
 | [Termux Setup](mobile/termux-setup.md) | Installation, package management, SSH, Tmux, FFmpeg |
 | [Linux on Android](mobile/linux-on-android.md) | Ubuntu via proot-distro with GUI (VNC + LXQt/LXDE) |
 | [Desktop Environments](mobile/desktop-environments.md) | XFCE, LXDE, LXQT, GNOME, KDE on headless + Termux X11 |
