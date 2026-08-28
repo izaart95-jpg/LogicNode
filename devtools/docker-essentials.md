@@ -754,4 +754,4 @@ curl http://localhost:5000/v2/_catalog
 - [Tunneling Tools](../networking/tunneling-tools.md) — Expose Docker services with ngrok, Cloudflared
 - [Remote Access](../networking/remote-access.md) — Access Docker hosts remotely
 - [AI Chat Interfaces](../ai/chat-interfaces.md) — LibreChat, Open WebUI (commonly Docker-deployed)
-- [APIs & Resources](../reference/apis-and-resources.md) — API keys for LibreChat configuration
+- [APIs & Resources](apis-and-resources.md) — API keys for LibreChat configuration

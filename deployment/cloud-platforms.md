@@ -646,5 +646,5 @@ batch.execute()
 
 - [Hosting Platforms](hosting-platforms.md) — Vercel, Netlify, Firebase Studio for web deployment
 - [AI Platforms & APIs](../ai/platforms-and-apis.md) — LLM APIs, AI services, model hosting
-- [APIs & Resources](../reference/apis-and-resources.md) — Public APIs, developer tools, free resources
+- [APIs & Resources](../devtools/apis-and-resources.md) — Public APIs, developer tools, free resources
 - [Docker Essentials](../devtools/docker-essentials.md) — Containerized deployments on cloud platforms

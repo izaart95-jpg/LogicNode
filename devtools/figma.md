@@ -256,4 +256,4 @@ figma.ui.onmessage = (msg) => {
 
 - [Editors & IDEs](editors-and-ides.md) — Code editors for implementing designs
 - [Docker Essentials](docker-essentials.md) — Containerize front-end builds from Figma designs
-- [APIs & Resources](../reference/apis-and-resources.md) — API keys and services for Figma integrations
+- [APIs & Resources](apis-and-resources.md) — API keys and services for Figma integrations

@@ -347,7 +347,7 @@ M5StickC Plus2:   Pocket-sized, screen, battery
 M5Stack Core:     Larger, 3 programmable buttons, bigger display
 ```
 
-### LilyGo Devices (see lilygo-devices.md)
+### LilyGo Devices (see lilygo-stm32-cnc.md)
 
 ```
 T-Deck:     Full keyboard + large screen + ESP32-S3. Bruce/Marauder/GhostESP.
@@ -368,7 +368,7 @@ Cheap Yellow Display (CYD): ESP32 + 2.8" touchscreen, ~$10 on AliExpress
 ## See Also
 
 - [Flipper Zero](flipper-zero.md) — Multi-tool device that pairs with Marauder/GhostESP
-- [LilyGo Devices](lilygo-devices.md) — T-Deck, T-Embed hardware overview
+- [LilyGo Devices](lilygo-stm32-cnc.md) — T-Deck, T-Embed hardware overview
 - [ESP32](esp32.md) — ESP32 fundamentals, pinouts, programming
 - [Network Analysis](../security/network-analysis.md) — Zeek for analyzing captured traffic
 - [Penetration Testing Tools](../security/penetration-testing-tools.md) — Hashcat for cracking captures

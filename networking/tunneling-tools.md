@@ -683,4 +683,4 @@ ngrok http 5000
 - [Remote Access](remote-access.md) — RDP, VNC, remote desktop tools
 - [VPN & ZTNA](vpn-and-ztna.md) — Tailscale, WireGuard, Cloudflare WARP
 - [Free DNS Services](free-dns-services.md) — DuckDNS, FreeDNS for custom domains
-- [APIs & Developer Resources](../reference/apis-and-resources.md) — Public APIs, webhook testing endpoints
+- [APIs & Developer Resources](../devtools/apis-and-resources.md) — Public APIs, webhook testing endpoints

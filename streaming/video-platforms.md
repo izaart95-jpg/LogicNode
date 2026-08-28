@@ -219,4 +219,4 @@ By season:     Filter by year and season (Winter, Spring, Summer, Fall)
 
 - [Anime Streaming](anime-streaming.md) — AnimePahe, AnimeKai, HiAnime, Toono, RareAnimes
 - [Media Tools](../media/media-tools.md) — FFmpeg, VLC for processing downloaded video
-- [Platforms & Communities](platforms-and-communities.md) — Social platforms and content communities
+- [Platforms & Communities](../reference/platforms-and-communities.md) — Social platforms and content communities

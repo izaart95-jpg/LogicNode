@@ -413,5 +413,5 @@ curl "http://web.archive.org/cdx/search/cdx?url=*.example.com&output=json&fl=tim
 ## See Also
 
 - [MediaFire](mediafire.md) — Commercial file hosting for private and large file sharing
-- [APIs & Resources](apis-and-resources.md) — Public APIs and developer resources
+- [APIs & Resources](../devtools/apis-and-resources.md) — Public APIs and developer resources
 - [OPSEC & Proxies](../security/opsec-and-proxies.md) — Accessing Archive.org anonymously via Tor

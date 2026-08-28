@@ -338,4 +338,4 @@ Musicians, podcasters, and video creators use MediaFire to host files for direct
 
 - [Archive.org](archive-org.md) — Permanent free archival storage and the Wayback Machine
 - [OnionShare](../networking/onionshare.md) — Anonymous file sharing over Tor
-- [APIs & Resources](apis-and-resources.md) — Developer API reference
+- [APIs & Resources](../devtools/apis-and-resources.md) — Developer API reference

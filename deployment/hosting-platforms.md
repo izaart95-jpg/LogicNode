@@ -454,4 +454,4 @@ exports.onUserCreate = functions.firestore
 - [Cloud Platforms](cloud-platforms.md) — GCP, Google Colab, Kaggle, and more
 - [Docker Essentials](../devtools/docker-essentials.md) — Containerized deployments and self-hosting
 - [Tunneling Tools](../networking/tunneling-tools.md) — Expose local development servers publicly
-- [APIs & Resources](../reference/apis-and-resources.md) — API services and developer tools
+- [APIs & Resources](../devtools/apis-and-resources.md) — API services and developer tools

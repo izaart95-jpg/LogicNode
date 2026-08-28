@@ -1450,4 +1450,4 @@ cloudflared tunnel --url http://localhost:5000
 - [Tunneling Tools](../networking/tunneling-tools.md) — Ngrok, LocalXpose, Cloudflared for exposing local APIs
 - [SSH Tunneling](../networking/ssh-tunneling.md) — SSH-based tunneling for API access
 - [Network Protocols](../fundamentals/network-protocols.md) — HTTP, TCP, UDP protocol details
-- [Platforms & Communities](platforms-and-communities.md) — Developer resources
+- [Platforms & Communities](../reference/platforms-and-communities.md) — Developer resources

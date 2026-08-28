@@ -2,7 +2,7 @@
 
 Kubernetes (K8s) is the industry-standard open-source system for automating deployment, scaling, and management of containerized applications. Where Docker packages and runs individual containers, Kubernetes orchestrates fleets of them across clusters of machines.
 
-> **See Also:** [Docker Essentials](docker-essentials.md) — Before learning Kubernetes, understanding Docker images, containers, and Compose is strongly recommended.
+> **See Also:** [Docker Essentials](../devtools/docker-essentials.md) — Before learning Kubernetes, understanding Docker images, containers, and Compose is strongly recommended.
 
 ---
 
@@ -867,6 +867,6 @@ kubectl get nodes
 
 ## See Also
 
-- [Docker Essentials](docker-essentials.md) — Containers, images, Compose — prerequisite knowledge for Kubernetes
+- [Docker Essentials](../devtools/docker-essentials.md) — Containers, images, Compose — prerequisite knowledge for Kubernetes
 - [Cloud Platforms](cloud-platforms.md) — GCP, Colab, cloud compute environments
 - [Hosting Platforms](hosting-platforms.md) — Vercel, Netlify, Firebase for simpler deployments

@@ -435,6 +435,6 @@ Cases and holsters:
 ## See Also
 
 - [ESP32 Offensive Firmware](offensive-firmware.md) — Marauder, Bruce, GhostESP for WiFi attacks
-- [LilyGo Devices](lilygo-devices.md) — Alternative hardware for security testing
+- [LilyGo Devices](lilygo-stm32-cnc.md) — Alternative hardware for security testing
 - [ESP32](esp32.md) — ESP32 fundamentals
 - [Penetration Testing Tools](../security/penetration-testing-tools.md) — Complementary tools

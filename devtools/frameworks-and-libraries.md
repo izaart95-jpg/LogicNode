@@ -584,4 +584,4 @@ func main() {
 - [Docker Essentials](docker-essentials.md) — Containerize PyTorch training environments and Minecraft servers
 - [Editors & IDEs](editors-and-ides.md) — Set up VS Code for Python/Node.js/Go development
 - [Terminal Tools](terminal-tools.md) — Use tmux for persistent bot sessions
-- [APIs & Resources](../reference/apis-and-resources.md) — API keys and cloud GPU providers
+- [APIs & Resources](apis-and-resources.md) — API keys and cloud GPU providers
