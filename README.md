@@ -126,7 +126,7 @@
 | [Creative Software](media/creative-software.md) | Blender (3D+render), DaVinci Resolve (color+edit), Photoshop, Premiere Pro, Filmora, CapCut desktop |
 | [Media Tools](media/media-tools.md) | FFmpeg, VLC, GIMP |
 | [Mobile Creative Tools](media/mobile-creative-tools.md) | CapCut, Alight Motion, CPU-Z |
-| [Image Upscalers](media/imgupscaler.md) | imgupscaler.com, Real-ESRGAN, Upscayl, Waifu2x |
+| [Image Upscalers](media/image-upscalers.md) | imgupscaler.com, Real-ESRGAN, Upscayl, Waifu2x |
 
 ### Mail
 | Document | Description |
